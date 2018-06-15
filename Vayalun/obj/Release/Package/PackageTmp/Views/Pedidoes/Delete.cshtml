@@ -1,0 +1,80 @@
+﻿@model Vayalun.Models.Pedido
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Pedido</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Cliente.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cliente.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Funcionario.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Funcionario.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mesa.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mesa.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DataPedidoFeito)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DataPedidoFeito)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DataPedidoPronto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DataPedidoPronto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
