@@ -203,10 +203,13 @@
     <Compile Include="Controllers\FuncionariosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemCardapiosController.cs" />
+    <Compile Include="Controllers\ItemPedidoesAPIController.cs" />
     <Compile Include="Controllers\MesasController.cs" />
     <Compile Include="Controllers\MesaViewController.cs" />
+    <Compile Include="Controllers\PedidoesAPIController.cs" />
     <Compile Include="Controllers\PedidoesController.cs" />
     <Compile Include="DAL\VayalunContext.cs" />
+    <Compile Include="Extension\DebugLog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -325,6 +328,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Logs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

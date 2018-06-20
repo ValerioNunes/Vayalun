@@ -36,5 +36,7 @@ namespace Vayalun.DAL
         public System.Data.Entity.DbSet<Vayalun.Models.Mesa> Mesas { get; set; }
 
         public System.Data.Entity.DbSet<Vayalun.Models.Pedido> Pedidoes { get; set; }
+
+        public System.Data.Entity.DbSet<Vayalun.Models.ItemPedido> ItemPedidoes { get; set; }
     }
     }

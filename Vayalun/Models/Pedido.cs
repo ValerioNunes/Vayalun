@@ -35,5 +35,9 @@ namespace Vayalun.Models
         [Column("tbfuncionario_id")]
         public int FuncionarioId { set; get; }
         public Funcionario Funcionario { set; get; }
+
+
+        public ICollection<ItemPedido> ItemPedidosId { set; get; }
+
     }
 }

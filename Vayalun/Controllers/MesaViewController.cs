@@ -1,6 +1,9 @@
-﻿using System;
+﻿using HelperDinamico.Extension;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -26,14 +29,19 @@ namespace Vayalun.Controllers
                 vlmesaView.Status = "livre";
                 mesaViews.Add(vlmesaView);
             });
-
+            DebugLog.Logar("Teste");
             return Json(mesaViews);
         }
 
         // GET: api/MesaView/5
-        public string Get(int id)
+        [ResponseType(typeof(List<Pedido>))]
+        public IHttpActionResult Get(int id)
         {
-            return "value";
+            var lvpedidos = db.Pedidoes.Include(i => i.Cliente)
+                           .Include(i => i.Funcionario)
+                           .Include(i => i.Mesa)
+                           .Where( x => x.MesaId == id && !x.Status.Equals("PAGO")).ToList();
+            return Json(lvpedidos);
         }
 
         // POST: api/MesaView

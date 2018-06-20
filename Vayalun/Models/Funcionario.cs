@@ -24,7 +24,5 @@ namespace Vayalun.Models
         [Column("tbcargo_id")]
         public int CargoId { set; get; }
         public Cargo Cargo { set; get; }
-    
-
     }
 }
