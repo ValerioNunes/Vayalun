@@ -107,8 +107,8 @@ C:\Users\valerio\source\repos\Vayalun\Vayalun\bin\pt-br\System.Web.Razor.resourc
 C:\Users\valerio\source\repos\Vayalun\Vayalun\bin\pt-br\System.Web.WebPages.resources.dll
 C:\Users\valerio\source\repos\Vayalun\Vayalun\bin\pt-br\System.Web.WebPages.Deployment.resources.dll
 C:\Users\valerio\source\repos\Vayalun\Vayalun\bin\pt-br\System.Web.WebPages.Razor.resources.dll
-C:\Users\valerio\source\repos\Vayalun\Vayalun\obj\Release\Vayalun.csprojResolveAssemblyReference.cache
 C:\Users\valerio\source\repos\Vayalun\Vayalun\obj\Release\Vayalun.csproj.CoreCompileInputs.cache
 C:\Users\valerio\source\repos\Vayalun\Vayalun\obj\Release\Vayalun.csproj.CopyComplete
 C:\Users\valerio\source\repos\Vayalun\Vayalun\obj\Release\Vayalun.dll
 C:\Users\valerio\source\repos\Vayalun\Vayalun\obj\Release\Vayalun.pdb
+C:\Users\valerio\source\repos\Vayalun\Vayalun\obj\Release\Vayalun.csprojAssemblyReference.cache

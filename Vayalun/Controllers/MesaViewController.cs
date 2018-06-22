@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Vayalun.DAL;
 using Vayalun.Models;
+using System.Configuration;
 
 namespace Vayalun.Controllers
 {
@@ -26,7 +27,10 @@ namespace Vayalun.Controllers
                 MesaView vlmesaView = new MesaView();
                 vlmesaView.Id = x.Id;
                 vlmesaView.Nome = x.Nome;
-                vlmesaView.Status = "livre";
+                List<Pedido> lvpedidos = db.Pedidoes.Where(y => y.MesaId == x.Id && !y.Status.Equals("PAGO")).ToList();
+               
+                vlmesaView.Status = (lvpedidos.Count <= 0) ? ConfigurationManager.AppSettings["LIVRE"].ToString() : ConfigurationManager.AppSettings["OCUPADO"].ToString();
+
                 mesaViews.Add(vlmesaView);
             });
             DebugLog.Logar("Teste");

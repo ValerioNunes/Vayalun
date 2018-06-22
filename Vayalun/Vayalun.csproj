@@ -202,6 +202,7 @@
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\FuncionariosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ItemCardapioAPIController.cs" />
     <Compile Include="Controllers\ItemCardapiosController.cs" />
     <Compile Include="Controllers\ItemPedidoesAPIController.cs" />
     <Compile Include="Controllers\MesasController.cs" />

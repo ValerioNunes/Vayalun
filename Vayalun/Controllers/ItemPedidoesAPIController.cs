@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HelperDinamico.Extension;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -24,96 +25,128 @@ namespace Vayalun.Controllers
         }
 
         // GET: api/ItemPedidoesAPI/5
-        [ResponseType(typeof(ItemPedido))]
+        [ResponseType(typeof(List<ItemPedido>))]
         public IHttpActionResult GetItemPedido(int id)
         {
-            ItemPedido itemPedido = db.ItemPedidoes.Find(id);
-            if (itemPedido == null)
+            List<ItemPedido> itemPedidos = db.ItemPedidoes.Include(s => s.ItemCardapio).Where(x => x.PedidoId == id).ToList();
+            if (itemPedidos == null)
             {
                 return NotFound();
             }
 
-            return Ok(itemPedido);
+            return Json(itemPedidos);
         }
 
         // PUT: api/ItemPedidoesAPI/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutItemPedido(int id, ItemPedido itemPedido)
         {
-            if (!ModelState.IsValid)
+            if (itemPedido != null)
             {
-                return BadRequest(ModelState);
-            }
-
-            if (id != itemPedido.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(itemPedido).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ItemPedidoExists(id))
+                if (!ModelState.IsValid)
                 {
-                    return NotFound();
+                    return BadRequest(ModelState);
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return StatusCode(HttpStatusCode.NoContent);
+                if (id != itemPedido.Id)
+                {
+                    return BadRequest();
+                }
+
+                db.Entry(itemPedido).State = EntityState.Modified;
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ItemPedidoExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            return Ok();
         }
 
         // POST: api/ItemPedidoesAPI
+        [HttpOptions, HttpPost]
         [ResponseType(typeof(ItemPedido))]
         public IHttpActionResult PostItemPedido(ItemPedido itemPedido)
         {
-            if (!ModelState.IsValid)
+            if (itemPedido != null)
             {
-                return BadRequest(ModelState);
+                try
+                {
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
+
+                    db.ItemPedidoes.Add(itemPedido);
+                    db.SaveChanges();
+
+                    return CreatedAtRoute("DefaultApi", new { id = itemPedido.Id }, itemPedido);
+                }
+                catch (Exception e)
+                {
+                    DebugLog.Logar(e.Message);
+                    DebugLog.Logar(e.StackTrace);
+                    return Json("Erro ao cadastrar solicitação!");
+                }
             }
+            return Ok();
 
-            db.ItemPedidoes.Add(itemPedido);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = itemPedido.Id }, itemPedido);
         }
 
         // DELETE: api/ItemPedidoesAPI/5
         [ResponseType(typeof(ItemPedido))]
-        public IHttpActionResult DeleteItemPedido(int id)
+        public IHttpActionResult DeleteItemPedido(int? id)
         {
-            ItemPedido itemPedido = db.ItemPedidoes.Find(id);
-            if (itemPedido == null)
+            try
             {
-                return NotFound();
+                if (id != null)
+                {
+                    DebugLog.Logar(id.ToString());
+                    ItemPedido itemPedido = db.ItemPedidoes.Where(x => x.Id == id).FirstOrDefault();
+                    if (itemPedido == null)
+                    {
+                        return Ok("itemPedido == null");
+                    }
+
+                    db.ItemPedidoes.Remove(itemPedido);
+                    db.SaveChanges();
+                }
+                return Ok();
             }
-
-            db.ItemPedidoes.Remove(itemPedido);
-            db.SaveChanges();
-
-            return Ok(itemPedido);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            catch (Exception e)
             {
-                db.Dispose();
+                DebugLog.Logar(e.Message);
+                DebugLog.Logar(e.StackTrace);
+                return Json("Erro");
             }
-            base.Dispose(disposing);
         }
+    
 
-        private bool ItemPedidoExists(int id)
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            return db.ItemPedidoes.Count(e => e.Id == id) > 0;
+            db.Dispose();
         }
+        base.Dispose(disposing);
     }
+
+    private bool ItemPedidoExists(int id)
+    {
+        return db.ItemPedidoes.Count(e => e.Id == id) > 0;
+    }
+}
 }
