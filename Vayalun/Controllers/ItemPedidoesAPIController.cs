@@ -83,17 +83,48 @@ namespace Vayalun.Controllers
         {
             if (itemPedido != null)
             {
+             
                 try
                 {
-                    if (!ModelState.IsValid)
+                    if (itemPedido.Id == 0)
                     {
-                        return BadRequest(ModelState);
+                        if (!ModelState.IsValid)
+                        {
+                            return BadRequest(ModelState);
+                        }
+
+                        db.ItemPedidoes.Add(itemPedido);
+                        db.SaveChanges();
+
+                        return CreatedAtRoute("DefaultApi", new { id = itemPedido.Id }, itemPedido);
                     }
+                    else
+                    {
+                        if (!ModelState.IsValid)
+                        {
+                            return BadRequest(ModelState);
+                        }
 
-                    db.ItemPedidoes.Add(itemPedido);
-                    db.SaveChanges();
+                        db.Entry(itemPedido).State = EntityState.Modified;
 
-                    return CreatedAtRoute("DefaultApi", new { id = itemPedido.Id }, itemPedido);
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!ItemPedidoExists(itemPedido.Id))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+
+                        return Json("Sucessagem");
+                    }
                 }
                 catch (Exception e)
                 {

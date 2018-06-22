@@ -33,7 +33,7 @@ namespace Vayalun.Controllers
 
                 mesaViews.Add(vlmesaView);
             });
-            DebugLog.Logar("Teste");
+            
             return Json(mesaViews);
         }
 
