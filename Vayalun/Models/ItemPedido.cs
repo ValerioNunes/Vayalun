@@ -19,7 +19,11 @@ namespace Vayalun.Models
         [Column("preco")]
         public Double Preco { set; get; }
 
-       
+
+        [Column("obs")]
+        public String OBS { set; get; }
+
+
         [Column("tbpedido_id")]
         public int PedidoId { set; get; }
         public Pedido Pedido { set; get; }

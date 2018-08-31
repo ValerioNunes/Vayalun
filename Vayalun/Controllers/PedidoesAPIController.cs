@@ -41,41 +41,45 @@ namespace Vayalun.Controllers
         }
 
         // PUT: api/PedidoesAPI/5
+
         [ResponseType(typeof(void))]
         public IHttpActionResult PutPedido(int id, Pedido pedido)
         {
-            if (!ModelState.IsValid)
+            if (pedido != null)
             {
-                return BadRequest(ModelState);
-            }
-
-            if (id != pedido.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(pedido).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PedidoExists(id))
+                if (!ModelState.IsValid)
                 {
-                    return NotFound();
+                    return BadRequest(ModelState);
                 }
-                else
+
+                if (id != pedido.Id)
                 {
-                    throw;
+                    return BadRequest();
                 }
+
+                db.Entry(pedido).State = EntityState.Modified;
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!PedidoExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/PedidoesAPI
+                     return StatusCode(HttpStatusCode.NoContent);
+            }
+                // POST: api/PedidoesAPI
         [HttpOptions, HttpPost]
         [ResponseType(typeof(Pedido))]
         public IHttpActionResult PostPedido(Pedido pedido)
@@ -84,21 +88,52 @@ namespace Vayalun.Controllers
             {
                 try
                 {
-                    if (!ModelState.IsValid)
+                    if (pedido.Id == 0)
                     {
-                        return BadRequest(ModelState);
+                        if (!ModelState.IsValid)
+                        {
+                            return BadRequest(ModelState);
+                        }
+
+                        db.Pedidoes.Add(pedido);
+                        db.SaveChanges();
+
+                        return CreatedAtRoute("DefaultApi", new { id = pedido.Id }, pedido);
                     }
+                    else
+                    {
+                        if (!ModelState.IsValid)
+                        {
+                            return BadRequest(ModelState);
+                        }
 
-                    db.Pedidoes.Add(pedido);
-                    db.SaveChanges();
 
-                    return CreatedAtRoute("DefaultApi", new { id = pedido.Id }, pedido);
+                        db.Entry(pedido).State = EntityState.Modified;
+
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!PedidoExists(pedido.Id))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+
+                        return Json("Sucessagem");
+                    }
                 }
                 catch (Exception e)
                 {
                     DebugLog.Logar(e.Message);
                     DebugLog.Logar(e.StackTrace);
-                    return Json("Erro ao cadastrar solicitação!");
+                    return Json(e.Message);
                 }
             }
 
@@ -135,7 +170,7 @@ namespace Vayalun.Controllers
             return db.Pedidoes.Count(e => e.Id == id) > 0;
         }
 
-       
-        
+
+
     }
 }

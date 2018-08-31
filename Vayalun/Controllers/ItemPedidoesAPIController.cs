@@ -130,7 +130,7 @@ namespace Vayalun.Controllers
                 {
                     DebugLog.Logar(e.Message);
                     DebugLog.Logar(e.StackTrace);
-                    return Json("Erro ao cadastrar solicitação!");
+                    return Json(e.Message);
                 }
             }
             return Ok();

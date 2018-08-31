@@ -36,8 +36,7 @@ namespace Vayalun.Models
         public int FuncionarioId { set; get; }
         public Funcionario Funcionario { set; get; }
 
-
-        public ICollection<ItemPedido> ItemPedidosId { set; get; }
+        
 
     }
 }

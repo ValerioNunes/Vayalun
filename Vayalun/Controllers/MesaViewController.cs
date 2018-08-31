@@ -27,9 +27,11 @@ namespace Vayalun.Controllers
                 MesaView vlmesaView = new MesaView();
                 vlmesaView.Id = x.Id;
                 vlmesaView.Nome = x.Nome;
-                List<Pedido> lvpedidos = db.Pedidoes.Where(y => y.MesaId == x.Id && !y.Status.Equals("PAGO")).ToList();
-               
-                vlmesaView.Status = (lvpedidos.Count <= 0) ? ConfigurationManager.AppSettings["LIVRE"].ToString() : ConfigurationManager.AppSettings["OCUPADO"].ToString();
+                List<Pedido> lvpedidos = db.Pedidoes.Where(y => y.MesaId == x.Id && y.Status.Equals("AGUARDANDO") || y.Status.Equals("ENTREGUE") || y.Status.Equals("CONSUMO_FINALIZADO")).ToList();
+
+
+                vlmesaView.Status = (lvpedidos.Count <= 0) ? ConfigurationManager.AppSettings["LIVRE"].ToString() : (lvpedidos.FirstOrDefault().Status == "CONSUMO_FINALIZADO") ? "CONSUMO_FINALIZADO" : ConfigurationManager.AppSettings["OCUPADO"].ToString();
+
 
                 mesaViews.Add(vlmesaView);
             });
@@ -44,14 +46,43 @@ namespace Vayalun.Controllers
             var lvpedidos = db.Pedidoes.Include(i => i.Cliente)
                            .Include(i => i.Funcionario)
                            .Include(i => i.Mesa)
-                           .Where( x => x.MesaId == id && !x.Status.Equals("PAGO")).ToList();
+
+                           .Where( x => x.MesaId == id && !x.Status.Equals("PAGO") && !x.Status.Equals("CANCELADO")).ToList();
             return Json(lvpedidos);
         }
 
         // POST: api/MesaView
-        public void Post([FromBody]string value)
+        [HttpOptions, HttpPost]
+        [ResponseType(typeof(RegisterCredentials))]
+        public IHttpActionResult Post(RegisterCredentials registerCredentials)
         {
+            if (registerCredentials != null)
+            {
+                try
+                {
+
+                    DebugLog.Logar(registerCredentials.Id.ToString());
+                    Funcionario funcionario = db.Funcionarios.Where(x => x.Id == registerCredentials.Id && x.Senha == registerCredentials.Senha).Include(f => f.Cargo).FirstOrDefault();
+
+                    if (funcionario == null)
+                    {
+                        return Json("invalido");
+                    }
+
+                        return Json(funcionario);
+                    
+                }
+                catch (Exception e)
+                {
+                    DebugLog.Logar(e.Message);
+                    DebugLog.Logar(e.StackTrace);
+                    return Json("Erro ao cadastrar solicitação!");
+                }
+            }
+                return Ok("registerCredentials Null");
         }
+
+
 
         // PUT: api/MesaView/5
         public void Put(int id, [FromBody]string value)
