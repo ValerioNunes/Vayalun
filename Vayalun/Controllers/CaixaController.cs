@@ -51,20 +51,21 @@ namespace Vayalun.Controllers
                    .Where(x => x.MesaId == id && (x.Status.Equals("ENTREGUE") || x.Status.Equals("CONSUMO_FINALIZADO"))).ToList();
                 try
                 {
-                    lvpedidos.ForEach(X => {
-                    X.Status = "CONSUMO_FINALIZADO";
-                    db.Entry(X).State = EntityState.Modified;
-                    List<ItemPedido> vlitemPedidos = db.ItemPedidoes.Include(i => i.ItemCardapio).Where(y => y.PedidoId == X.Id).ToList();
-                    vlitemPedidos.ForEach(j =>
+                    lvpedidos.ForEach(X =>
                     {
-                        itemPedidos.Add(j);
+                        X.Status = "CONSUMO_FINALIZADO";
+                        db.Entry(X).State = EntityState.Modified;
+                        List<ItemPedido> vlitemPedidos = db.ItemPedidoes.Include(i => i.ItemCardapio).Where(y => y.PedidoId == X.Id).ToList();
+                        vlitemPedidos.ForEach(j =>
+                        {
+                            itemPedidos.Add(j);
+                        });
+
+                        db.Entry(X).State = EntityState.Modified;
                     });
 
-                    db.Entry(X).State = EntityState.Modified;
-                });
 
 
-                  
                     db.SaveChanges();
                     return Json(itemPedidos);
                 }
@@ -74,11 +75,58 @@ namespace Vayalun.Controllers
                     DebugLog.Logar(e.StackTrace);
                     return Json(e.Message);
                 }
-                
+
             }
 
             return null;
         }
+
+        [HttpOptions, HttpPost]
+        [ResponseType(typeof(MesaView))]
+        public IHttpActionResult Post(MesaView mesaView)
+        {
+            if (mesaView != null)
+            {
+
+                if (mesaView.Id > 0)
+                {
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
+
+                    
+                    List<Pedido> lvpedidos = db.Pedidoes.Include(i => i.Cliente)
+                       .Include(i => i.Funcionario)
+                       .Include(i => i.Mesa)
+                       .Where(x => x.MesaId == mesaView.Id && x.Status.Equals("CONSUMO_FINALIZADO")).ToList();
+                    try
+                    {
+                        lvpedidos.ForEach(X =>
+                        {
+                            X.Status = "PAGO";
+                            db.Entry(X).State = EntityState.Modified;
+
+                        });
+
+                        db.SaveChanges();
+
+                        return Ok("Pago com Sucesso");
+                    }
+                    catch (Exception e)
+                    {
+                        DebugLog.Logar(e.Message);
+                        DebugLog.Logar(e.StackTrace);
+                        return Json(e.Message);
+                    }
+                }
+            }
+
+            return Ok();
+        }
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

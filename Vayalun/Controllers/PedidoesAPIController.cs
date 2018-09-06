@@ -23,7 +23,7 @@ namespace Vayalun.Controllers
         {
             return db.Pedidoes.Include(i => i.Cliente)
                               .Include(i => i.Funcionario)
-                              .Include(i => i.Mesa);
+                              .Include(i => i.Mesa).Where(x => x.Status.Equals("AGUARDANDO"));
 
         }
 

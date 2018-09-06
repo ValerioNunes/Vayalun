@@ -27,7 +27,8 @@ namespace Vayalun.Controllers
                 MesaView vlmesaView = new MesaView();
                 vlmesaView.Id = x.Id;
                 vlmesaView.Nome = x.Nome;
-                List<Pedido> lvpedidos = db.Pedidoes.Where(y => y.MesaId == x.Id && y.Status.Equals("AGUARDANDO") || y.Status.Equals("ENTREGUE") || y.Status.Equals("CONSUMO_FINALIZADO")).ToList();
+                List<Pedido> lvpedidos = new List<Pedido>();
+                lvpedidos = db.Pedidoes.Where(y => y.MesaId == x.Id && (y.Status.Equals("AGUARDANDO") || y.Status.Equals("ENTREGUE") || y.Status.Equals("CONSUMO_FINALIZADO") || y.Status.Equals("PRONTO"))).ToList();
 
 
                 vlmesaView.Status = (lvpedidos.Count <= 0) ? ConfigurationManager.AppSettings["LIVRE"].ToString() : (lvpedidos.FirstOrDefault().Status == "CONSUMO_FINALIZADO") ? "CONSUMO_FINALIZADO" : ConfigurationManager.AppSettings["OCUPADO"].ToString();
